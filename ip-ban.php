@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: EPA TIC Requirements
+Plugin Name: Simple IP Ban
 Plugin URI: http://www.sandorkovacs.ro/ip-ban-wordpress-plugin/
-Description: Redirects user if not originating from an EPA IP RANGE or iplist when attempting to access admin pages.
+Description: Ban one or more Ip Address or User Agents. Also you may add an IP RANGE to iplist ex: 82.11.22.100-82.11.22-177
 Author: Sandor Kovacs
 Version: 1.3.0
 Author URI: http://sandorkovacs.ro/en/
@@ -22,7 +22,7 @@ function simple_ip_ban_init() {
 
 function register_simple_ip_ban_submenu_page() {
     add_submenu_page(
-        'options-general.php', __('EPA TIC Admin'), __('EPA TIC Admin'),
+        'options-general.php', __('Simple IP Ban'), __('Simple IP Ban'),
         'manage_options',
         'simple-ip-ban',
         'simple_ip_ban_callback' );
@@ -38,8 +38,8 @@ function simple_ip_ban_callback() {
         && wp_verify_nonce( $_POST['_wpprotect'], 'ipbanlist' ) ) {
         $ip_list                = wp_kses($_POST['ip_list'], array());
         $ua_list                = wp_kses($_POST['user_agent_list'], array());
-        //$redirect_url           = sanitize_text_field($_POST['redirect_url']);
-        //$not_for_logged_in_user = sanitize_text_field($_POST['not_for_logged_in_user']);
+        $redirect_url           = sanitize_text_field($_POST['redirect_url']);
+        $not_for_logged_in_user = sanitize_text_field($_POST['not_for_logged_in_user']);
 
         update_option('s_ip_list',                $ip_list);
         update_option('s_ua_list',                $ua_list);
@@ -58,11 +58,12 @@ function simple_ip_ban_callback() {
 ?>
 
 <div class="wrap" id='simple-ip-list'>
-    <div class="icon32" id="icon-options-general"><br></div><h2><?php _e('EPA TIC Admin'); ?></h2>
+    <div class="icon32" id="icon-options-general"><br></div><h2><?php _e('Simple IP Ban'); ?></h2>
 
     <p>
         <?php _e('Add ip address or/and user agents in the textareas. Add only 1 item per line.
-        User not falling under the specified IPs or ranges will be redirected to the homepage when attempting to access the admin section of the site.' ) ?>
+        You may specify a redirect url; when a user from a banned ip/user agent access your site,
+        he will be redirected to the specified URL.' ) ?>
     </p>
 
     <p>
@@ -79,6 +80,22 @@ function simple_ip_ban_callback() {
     <p>
     <label for='user-agent-list'><?php _e('User Agent List'); ?></label> <br/>
     <textarea name='user_agent_list' id='user-agent-list'><?php echo $ua_list ?></textarea>
+    <p>
+
+    <p>
+    <label for='redirect-url'><?php _e('Redirect URL'); ?></label> <br/>
+    <input  type='url' name='redirect_url' id='redirect-url'
+            value='<?php echo $redirect_url; ?>'
+            placeholder='<?php _e('Enter a valid URL') ?>' />
+    <p>
+    <p>
+    <label for='not-for-logged-in-user'><?php _e('Do Not Redirect for Logged In User'); ?></label> <br/>
+    <input  type='checkbox' name='not_for_logged_in_user' id='not-for-logged-in-user'
+            value='1'
+            <?php echo ($not_for_logged_in_user == 1 )  ? " checked='checked'" : "" ?>
+             />
+             <br/>
+             <small><?php _e('If this box is checked the IP BAN will be disabled for logged in users.') ?></small>
     <p>
 
     <?php wp_nonce_field('ipbanlist', '_wpprotect') ?>
@@ -101,14 +118,16 @@ function simple_ip_ban_callback() {
 function simple_ip_ban() {
 
     // Do nothing for admin user
-   // if ((is_user_logged_in() && is_admin()) ||
-      //  (intval(get_option('s_not_for_logged_in_user')) == 1  && is_user_logged_in())) return '';
+    if ((is_user_logged_in() && is_admin()) ||
+        (intval(get_option('s_not_for_logged_in_user')) == 1  && is_user_logged_in())) return '';
+
+
+
 
     $remote_ip = $_SERVER['REMOTE_ADDR'];
     $remote_ua = $_SERVER['HTTP_USER_AGENT'];
-    //$redirect_url = get_option('s_redirect_url');
-
-if (s_check_ip_address($remote_ip, get_option('s_ip_list')) ||
+    
+ if (s_check_ip_address($remote_ip, get_option('s_ip_list')) ||
         s_check_user_agent($remote_ua,get_option('s_ua_list')) && is_admin()) {
 if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by umchal
 } else {
