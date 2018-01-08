@@ -118,17 +118,32 @@ function simple_ip_ban_callback() {
 function simple_ip_ban() {
 
     // Do nothing for admin user
-    if ((is_user_logged_in() && is_admin()) ||
-        (intval(get_option('s_not_for_logged_in_user')) == 1  && is_user_logged_in())) return '';
+    //if ((is_user_logged_in() && is_admin()) ||
+   //     (intval(get_option('s_not_for_logged_in_user')) == 1  && is_user_logged_in())) return '';
 
 
 
 
-    $remote_ip = $_SERVER['REMOTE_ADDR'];
+ // Obtain IP Address
+if (!empty($_SERVER['HTTP_CLIENT_IP']))
+{
+	// check ip from share internet
+	$remote_ip = $_SERVER['HTTP_CLIENT_IP'];
+}
+elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+{
+	// to check ip is pass from proxy
+	$remote_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+}
+else
+{
+	$remote_ip = $_SERVER['REMOTE_ADDR'];
+}
+
     $remote_ua = $_SERVER['HTTP_USER_AGENT'];
-    
+
  if (s_check_ip_address($remote_ip, get_option('s_ip_list')) ||
-        s_check_user_agent($remote_ua,get_option('s_ua_list')) && is_admin()) {
+        s_check_user_agent($remote_ua,get_option('s_ua_list'))) {
 if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by umchal
 } else {
 wp_redirect( home_url() );
