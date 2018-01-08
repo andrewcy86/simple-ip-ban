@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: EPA TIC Requirements
-Plugin URI: http://www.epa.gov
+Plugin URI: http://www.sandorkovacs.ro/ip-ban-wordpress-plugin/
 Description: Redirects user if not originating from an EPA IP RANGE or iplist when attempting to access admin pages.
-Author: Andrew Y
+Author: Sandor Kovacs
 Version: 1.3.0
-Author URI: https://epa.gov
+Author URI: http://sandorkovacs.ro/en/
 */
 
 // Do the magic stuff
