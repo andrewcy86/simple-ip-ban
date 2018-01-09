@@ -58,12 +58,11 @@ function simple_ip_ban_callback() {
 ?>
 
 <div class="wrap" id='simple-ip-list'>
-    <div class="icon32" id="icon-options-general"><br></div><h2><?php _e('Simple IP Ban'); ?></h2>
+    <div class="icon32" id="icon-options-general"><br></div><h2><?php _e('EPA TIC Admin'); ?></h2>
 
     <p>
         <?php _e('Add ip address or/and user agents in the textareas. Add only 1 item per line.
-        You may specify a redirect url; when a user from a banned ip/user agent access your site,
-        he will be redirected to the specified URL.' ) ?>
+        User not falling under the specified IPs or ranges will be redirected to the homepage when attempting to access the admin section of the site.' ) ?>
     </p>
 
     <p>
