@@ -169,6 +169,14 @@ function s_check_ip_address($ip, $ip_list) {
                 sprintf("%u", $low_ip) <= sprintf("%u", $checked_ip)) return true;
         }
     }
+    // Enable Wildcard Search in IP List	
+        foreach($list_arr as $i){
+            $wildcardPos = strpos($i, "*");
+            # Check if the ip has a wildcard
+            if($wildcardPos !== false && substr($ip, 0, $wildcardPos) . "*" == $i)
+                return true;
+        }
+
 
     return false;
 }
