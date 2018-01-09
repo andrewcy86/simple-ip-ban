@@ -132,6 +132,7 @@ else
 if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by umchal
 } else {
 wp_redirect( home_url() );
+show_admin_bar(false);
 //exit;
 }
 
