@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Simple IP Ban
+Plugin Name: EPA TIC Admin
 Plugin URI: http://www.sandorkovacs.ro/ip-ban-wordpress-plugin/
 Description: Ban one or more Ip Address or User Agents. Also you may add an IP RANGE to iplist ex: 82.11.22.100-82.11.22-177
 Author: Sandor Kovacs
@@ -38,21 +38,21 @@ function simple_ip_ban_callback() {
         && wp_verify_nonce( $_POST['_wpprotect'], 'ipbanlist' ) ) {
         $ip_list                = wp_kses($_POST['ip_list'], array());
         $ua_list                = wp_kses($_POST['user_agent_list'], array());
-        $redirect_url           = sanitize_text_field($_POST['redirect_url']);
-        $not_for_logged_in_user = sanitize_text_field($_POST['not_for_logged_in_user']);
+        //$redirect_url           = sanitize_text_field($_POST['redirect_url']);
+        //$not_for_logged_in_user = sanitize_text_field($_POST['not_for_logged_in_user']);
 
         update_option('s_ip_list',                $ip_list);
         update_option('s_ua_list',                $ua_list);
-        update_option('s_redirect_url',           $redirect_url);
-        update_option('s_not_for_logged_in_user', $not_for_logged_in_user);
+        //update_option('s_redirect_url',           $redirect_url);
+        //update_option('s_not_for_logged_in_user', $not_for_logged_in_user);
     }
 
     // read values from option table
 
     $ip_list      = get_option('s_ip_list');
     $ua_list      = get_option('s_ua_list');
-    $redirect_url = get_option('s_redirect_url');
-    $not_for_logged_in_user = (intval(get_option('s_not_for_logged_in_user')) == 1 ) ? 1 : 0;
+    //$redirect_url = get_option('s_redirect_url');
+    //$not_for_logged_in_user = (intval(get_option('s_not_for_logged_in_user')) == 1 ) ? 1 : 0;
 
 
 ?>
@@ -75,28 +75,14 @@ function simple_ip_ban_callback() {
     <p>
     <label for='ip-list'><?php _e('IP List'); ?></label> <br/>
     <textarea name='ip_list' id='ip-list'><?php echo $ip_list ?></textarea>
-    <p>
+    </p>
 
     <p>
     <label for='user-agent-list'><?php _e('User Agent List'); ?></label> <br/>
     <textarea name='user_agent_list' id='user-agent-list'><?php echo $ua_list ?></textarea>
-    <p>
+    </p>
 
-    <p>
-    <label for='redirect-url'><?php _e('Redirect URL'); ?></label> <br/>
-    <input  type='url' name='redirect_url' id='redirect-url'
-            value='<?php echo $redirect_url; ?>'
-            placeholder='<?php _e('Enter a valid URL') ?>' />
-    <p>
-    <p>
-    <label for='not-for-logged-in-user'><?php _e('Do Not Redirect for Logged In User'); ?></label> <br/>
-    <input  type='checkbox' name='not_for_logged_in_user' id='not-for-logged-in-user'
-            value='1'
-            <?php echo ($not_for_logged_in_user == 1 )  ? " checked='checked'" : "" ?>
-             />
-             <br/>
-             <small><?php _e('If this box is checked the IP BAN will be disabled for logged in users.') ?></small>
-    <p>
+   
 
     <?php wp_nonce_field('ipbanlist', '_wpprotect') ?>
 
