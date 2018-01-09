@@ -22,7 +22,7 @@ function simple_ip_ban_init() {
 
 function register_simple_ip_ban_submenu_page() {
     add_submenu_page(
-        'options-general.php', __('Simple IP Ban'), __('Simple IP Ban'),
+        'options-general.php', __('EPA TIC Admin'), __('EPA TIC Admin'),
         'manage_options',
         'simple-ip-ban',
         'simple_ip_ban_callback' );
