@@ -131,7 +131,10 @@ else
         s_check_user_agent($remote_ua,get_option('s_ua_list'))) {
 if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by umchal
 } else {
-wp_redirect( home_url() );
+// wp_redirect( home_url() ); Un-comment when going to production
+header("Location: 404.php");
+exit();
+// comment out above two lines when going to production
 show_admin_bar(false);
 //exit;
 }
