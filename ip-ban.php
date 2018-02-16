@@ -38,11 +38,13 @@ function simple_ip_ban_callback() {
         && wp_verify_nonce( $_POST['_wpprotect'], 'ipbanlist' ) ) {
         $ip_list                = wp_kses($_POST['ip_list'], array());
         $ua_list                = wp_kses($_POST['user_agent_list'], array());
+	$dev_mode               = sanitize_text_field($_POST['dev_mode']);
         //$redirect_url           = sanitize_text_field($_POST['redirect_url']);
         //$not_for_logged_in_user = sanitize_text_field($_POST['not_for_logged_in_user']);
 
         update_option('s_ip_list',                $ip_list);
         update_option('s_ua_list',                $ua_list);
+	update_option('s_dev_mode',                $dev_mode);
         //update_option('s_redirect_url',           $redirect_url);
         //update_option('s_not_for_logged_in_user', $not_for_logged_in_user);
     }
@@ -51,6 +53,7 @@ function simple_ip_ban_callback() {
 
     $ip_list      = get_option('s_ip_list');
     $ua_list      = get_option('s_ua_list');
+    $dev_mode      = get_option('s_dev_mode');
     //$redirect_url = get_option('s_redirect_url');
     //$not_for_logged_in_user = (intval(get_option('s_not_for_logged_in_user')) == 1 ) ? 1 : 0;
 
@@ -84,6 +87,11 @@ function simple_ip_ban_callback() {
    
 
     <?php wp_nonce_field('ipbanlist', '_wpprotect') ?>
+	    
+    <p>
+    <label for='dev-mode'><?php _e('Developer Mode'); ?></label> <br/>
+    <input type='checkbox' name='dev_mode' id='dev-mode' <?php checked( $dev_mode, 1 ); ?> value='1'>
+    </p>   
 
     <p>
         <input type='submit' name='submit' value='<?php _e('Save') ?>' />
@@ -131,10 +139,14 @@ else
         s_check_user_agent($remote_ua,get_option('s_ua_list'))) {
 if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by umchal
 } else {
-// wp_redirect( home_url() ); Un-comment when going to production
-header("Location: 404.php");
-exit();
-// comment out above two lines when going to production
+	 
+if ( ! empty( $dev_mode ) ) {
+    header("Location: 404.php");
+} else {
+    wp_redirect( home_url() );
+}	 
+    exit();
+	 
 show_admin_bar(false);
 //exit;
 }
