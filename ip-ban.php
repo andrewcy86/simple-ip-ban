@@ -139,8 +139,8 @@ else
         s_check_user_agent($remote_ua,get_option('s_ua_list'))) {
 if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by umchal
 } else {
-	 
-if ( $dev_mode == 1 ) {
+	
+if ( ! empty( get_option('s_dev_mode') ) ) {
     header("Location: 404.php");
 	exit();
 } else {
