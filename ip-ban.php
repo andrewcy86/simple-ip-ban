@@ -142,10 +142,10 @@ if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by
 	 
 if ( ! empty( $dev_mode ) ) {
     header("Location: 404.php");
+	exit();
 } else {
     wp_redirect( home_url() );
 }	 
-    exit();
 	 
 show_admin_bar(false);
 //exit;
