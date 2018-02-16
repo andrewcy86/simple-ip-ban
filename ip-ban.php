@@ -140,7 +140,7 @@ else
 if ( simple_ip_ban_get_current_url() ==  home_url() ) return '';  //suggested by umchal
 } else {
 	 
-if ( ! empty( $dev_mode ) ) {
+if ( $dev_mode == 1 ) {
     header("Location: 404.php");
 	exit();
 } else {
